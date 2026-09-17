@@ -1,15 +1,10 @@
 import express from 'express';
 import { Activity, LeaderboardEntry, Team, User, Workout } from './models/index.js';
+import { apiPort, getApiBaseUrl } from './config/api.js';
 import { connectToDatabase } from './config/database.js';
 const app = express();
-const port = Number(process.env.PORT || 8000);
-const getBaseUrl = () => {
-    const codespaceName = process.env.CODESPACE_NAME;
-    return codespaceName
-        ? `https://${codespaceName}-8000.app.github.dev`
-        : `http://localhost:${port}`;
-};
-const apiBaseUrl = getBaseUrl();
+const port = Number(process.env.PORT || apiPort);
+const apiBaseUrl = getApiBaseUrl(undefined, port);
 app.use(express.json());
 app.get('/api/health', async (_request, response) => {
     try {
