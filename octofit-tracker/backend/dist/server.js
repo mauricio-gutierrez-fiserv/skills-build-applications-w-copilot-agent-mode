@@ -4,7 +4,11 @@ import { apiPort, getApiBaseUrl } from './config/api.js';
 import { connectToDatabase } from './config/database.js';
 const app = express();
 const port = Number(process.env.PORT || apiPort);
-const apiBaseUrl = getApiBaseUrl(undefined, port);
+const codespaceName = process.env.CODESPACE_NAME;
+const codespaceBaseUrl = codespaceName
+    ? `https://${codespaceName}-8000.app.github.dev`
+    : undefined;
+const apiBaseUrl = codespaceBaseUrl || getApiBaseUrl(undefined, port);
 app.use(express.json());
 app.get('/api/health', async (_request, response) => {
     try {
