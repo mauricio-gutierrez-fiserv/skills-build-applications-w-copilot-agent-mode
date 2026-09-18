@@ -12,8 +12,8 @@ const getRecords = (payload) => {
   return []
 }
 
-export async function fetchRecords(component) {
-  const response = await fetch(`${API_BASE_URL}/api/${component}/`)
+export async function fetchRecords(component, endpoint = `${API_BASE_URL}/api/${component}/`) {
+  const response = await fetch(endpoint)
   if (!response.ok) throw new Error(`Unable to load ${component} (${response.status})`)
   return getRecords(await response.json())
 }

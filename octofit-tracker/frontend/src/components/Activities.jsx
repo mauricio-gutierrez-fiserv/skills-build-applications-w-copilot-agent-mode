@@ -4,7 +4,10 @@ import { fetchRecords } from '../api.js'
 function Activities() {
   const [activities, setActivities] = useState([])
   const [error, setError] = useState('')
-  useEffect(() => { fetchRecords('activities').then(setActivities).catch((loadError) => setError(loadError.message)) }, [])
+  const activitiesEndpoint = import.meta.env.VITE_CODESPACE_NAME?.trim()
+    ? `https://${import.meta.env.VITE_CODESPACE_NAME.trim()}-8000.app.github.dev/api/activities/`
+    : 'http://localhost:8000/api/activities/'
+  useEffect(() => { fetchRecords('activities', activitiesEndpoint).then(setActivities).catch((loadError) => setError(loadError.message)) }, [activitiesEndpoint])
   return <CollectionPage title="Activities" description="Recent movement logged by the OctoFit community.">{error ? <ErrorMessage message={error} /> : <div className="table-responsive"><table className="table align-middle mb-0"><thead><tr><th>Type</th><th>Duration</th><th>Calories</th><th>Distance</th><th>Date</th></tr></thead><tbody>{activities.map((activity) => <tr key={activity._id || `${activity.type}-${activity.date}`}><td className="text-capitalize fw-semibold">{activity.type}</td><td>{activity.durationMinutes} min</td><td>{activity.calories} kcal</td><td>{activity.distanceKm} km</td><td>{new Date(activity.date).toLocaleDateString()}</td></tr>)}</tbody></table>{!activities.length && <EmptyMessage />}</div>}</CollectionPage>
 }
 
